@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="85dc7092-2da7-47ea-97c1-7fe07ee09699" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../hello/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../hello/Dockerfile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../hello/Makefile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../hello/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../hello/generate.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../hello/go.mod" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../hello/go.sum" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../hello/handler/hello.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../hello/hello-cli.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../hello/main.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../hello/plugin.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../hello/proto/hello/hello.pb.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../hello/proto/hello/hello.pb.micro.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../hello/proto/hello/hello.proto" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../hello/subscriber/hello.go" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="GOROOT" path="/usr/local/go" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="GoLibraries">
+    <option name="indexEntireGoPath" value="false" />
+  </component>
+  <component name="ProjectId" id="1jYYNRXiWqdrrALrhRPugpqTCWl" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="autoscrollFromSource" value="true" />
+    <option name="autoscrollToSource" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="configurable.Global.GOPATH.is.expanded" value="true" />
+    <property name="configurable.Project.GOPATH.is.expanded" value="true" />
+    <property name="go.import.settings.migrated" value="true" />
+    <property name="go.sdk.automatically.set" value="true" />
+    <property name="go.tried.to.enable.integration.vgo.integrator" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VgoProject">
+    <integration-enabled>true</integration-enabled>
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="760" y="375" key="#Go_Modules" timestamp="1603982857368">
+      <screen x="0" y="24" width="1920" height="1056" />
+    </state>
+    <state x="760" y="375" key="#Go_Modules/0.24.1920.1056@0.24.1920.1056" timestamp="1603982857368" />
+    <state x="852" y="406" key="EnvironmentVariablesDialog" timestamp="1603982854968">
+      <screen x="0" y="24" width="1920" height="1056" />
+    </state>
+    <state x="852" y="406" key="EnvironmentVariablesDialog/0.24.1920.1056@0.24.1920.1056" timestamp="1603982854968" />
+  </component>
+</project>

@@ -1,0 +1,78 @@
+// 声明proto版本
+syntax = "proto3";
+
+// 服务名
+package go.micro.service.task;
+
+// 包路径
+option go_package = "proto/task";
+
+// 定义task服务接口
+service TaskService {
+  // 创建任务
+  rpc Create(Task) returns (OptResponse){}
+  // 删除任务
+  rpc Delete(Task) returns (OptResponse) {}
+  // 修改任务
+  rpc Modfiy(Task) returns (OptResponse) {}
+  // 完成任务
+  rpc Finished(Task) returns (OptResponse) {}
+  // 搜索
+  rpc Search(SearchRequest) returns (SearchResponse);
+
+}
+
+// 任务实体
+message Task {
+  // 任务ID
+  string id = 1;
+  // 任务主体
+  string body = 2;
+  // 任务开始时间
+  int64 startTime = 3;
+  // 任务结束时间
+  int64 endTime = 4;
+  // 实际完成时间
+  int64 finishTime = 5;
+  // 任务创建时间
+  int64 createTime = 6;
+  // 任务修改时间
+  int64 updateTime = 7;
+}
+
+// 操作结果实体
+message OptResponse {
+  int32 result = 1;
+  int32 code = 2;
+  string msg = 3;
+}
+
+// 查询接口参数实体
+message SearchRequest {
+  // 页码
+  int64 page = 1;
+  // 每页数量
+  int32 limit = 2;
+  // 排序方式
+  string sortBy = 3;
+  // 顺序 0降序，1升序
+  int32 order = 4;
+  // 关键字搜索
+  string keyword = 5;
+}
+
+// 查询接口返回值实体
+message SearchResponse {
+  // 当前页码
+  int64 page = 1;
+  // 每页数量
+  int32 limit = 2;
+  // 排序字段
+  string sortBy = 3;
+  // 顺序 0降序，1升序
+  int32 order = 4;
+  // 总记录数
+  int64 total = 5;
+  // 任务实体
+  repeated Task rows = 6;
+}
