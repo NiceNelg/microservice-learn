@@ -26,7 +26,7 @@ service TaskService {
 
 // 任务实体
 message Task {
-  // 任务ID
+  // 任务id
   // @inject_tag: bson:"_id"
   string id = 1;
   // 任务主体
