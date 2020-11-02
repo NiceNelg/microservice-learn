@@ -46,15 +46,15 @@ func NewTaskServiceEndpoints() []*api.Endpoint {
 
 type TaskService interface {
 	// 创建任务
-	Create(ctx context.Context, in *Task, opts ...client.CallOption) (*Response, error)
+	Create(ctx context.Context, in *Task, opts ...client.CallOption) (*ResponseObj, error)
 	// 删除任务
-	Delete(ctx context.Context, in *Task, opts ...client.CallOption) (*Response, error)
+	Delete(ctx context.Context, in *Task, opts ...client.CallOption) (*ResponseObj, error)
 	// 修改任务
-	Modfiy(ctx context.Context, in *Task, opts ...client.CallOption) (*Response, error)
+	Modfiy(ctx context.Context, in *Task, opts ...client.CallOption) (*ResponseObj, error)
 	// 完成任务
-	Finished(ctx context.Context, in *Task, opts ...client.CallOption) (*Response, error)
+	Finished(ctx context.Context, in *Task, opts ...client.CallOption) (*ResponseObj, error)
 	// 搜索
-	Search(ctx context.Context, in *SearchRequest, opts ...client.CallOption) (*Response, error)
+	Search(ctx context.Context, in *SearchRequest, opts ...client.CallOption) (*ResponseArr, error)
 }
 
 type taskService struct {
@@ -69,9 +69,9 @@ func NewTaskService(name string, c client.Client) TaskService {
 	}
 }
 
-func (c *taskService) Create(ctx context.Context, in *Task, opts ...client.CallOption) (*Response, error) {
+func (c *taskService) Create(ctx context.Context, in *Task, opts ...client.CallOption) (*ResponseObj, error) {
 	req := c.c.NewRequest(c.name, "TaskService.Create", in)
-	out := new(Response)
+	out := new(ResponseObj)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -79,9 +79,9 @@ func (c *taskService) Create(ctx context.Context, in *Task, opts ...client.CallO
 	return out, nil
 }
 
-func (c *taskService) Delete(ctx context.Context, in *Task, opts ...client.CallOption) (*Response, error) {
+func (c *taskService) Delete(ctx context.Context, in *Task, opts ...client.CallOption) (*ResponseObj, error) {
 	req := c.c.NewRequest(c.name, "TaskService.Delete", in)
-	out := new(Response)
+	out := new(ResponseObj)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -89,9 +89,9 @@ func (c *taskService) Delete(ctx context.Context, in *Task, opts ...client.CallO
 	return out, nil
 }
 
-func (c *taskService) Modfiy(ctx context.Context, in *Task, opts ...client.CallOption) (*Response, error) {
+func (c *taskService) Modfiy(ctx context.Context, in *Task, opts ...client.CallOption) (*ResponseObj, error) {
 	req := c.c.NewRequest(c.name, "TaskService.Modfiy", in)
-	out := new(Response)
+	out := new(ResponseObj)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -99,9 +99,9 @@ func (c *taskService) Modfiy(ctx context.Context, in *Task, opts ...client.CallO
 	return out, nil
 }
 
-func (c *taskService) Finished(ctx context.Context, in *Task, opts ...client.CallOption) (*Response, error) {
+func (c *taskService) Finished(ctx context.Context, in *Task, opts ...client.CallOption) (*ResponseObj, error) {
 	req := c.c.NewRequest(c.name, "TaskService.Finished", in)
-	out := new(Response)
+	out := new(ResponseObj)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -109,9 +109,9 @@ func (c *taskService) Finished(ctx context.Context, in *Task, opts ...client.Cal
 	return out, nil
 }
 
-func (c *taskService) Search(ctx context.Context, in *SearchRequest, opts ...client.CallOption) (*Response, error) {
+func (c *taskService) Search(ctx context.Context, in *SearchRequest, opts ...client.CallOption) (*ResponseArr, error) {
 	req := c.c.NewRequest(c.name, "TaskService.Search", in)
-	out := new(Response)
+	out := new(ResponseArr)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -123,24 +123,24 @@ func (c *taskService) Search(ctx context.Context, in *SearchRequest, opts ...cli
 
 type TaskServiceHandler interface {
 	// 创建任务
-	Create(context.Context, *Task, *Response) error
+	Create(context.Context, *Task, *ResponseObj) error
 	// 删除任务
-	Delete(context.Context, *Task, *Response) error
+	Delete(context.Context, *Task, *ResponseObj) error
 	// 修改任务
-	Modfiy(context.Context, *Task, *Response) error
+	Modfiy(context.Context, *Task, *ResponseObj) error
 	// 完成任务
-	Finished(context.Context, *Task, *Response) error
+	Finished(context.Context, *Task, *ResponseObj) error
 	// 搜索
-	Search(context.Context, *SearchRequest, *Response) error
+	Search(context.Context, *SearchRequest, *ResponseArr) error
 }
 
 func RegisterTaskServiceHandler(s server.Server, hdlr TaskServiceHandler, opts ...server.HandlerOption) error {
 	type taskService interface {
-		Create(ctx context.Context, in *Task, out *Response) error
-		Delete(ctx context.Context, in *Task, out *Response) error
-		Modfiy(ctx context.Context, in *Task, out *Response) error
-		Finished(ctx context.Context, in *Task, out *Response) error
-		Search(ctx context.Context, in *SearchRequest, out *Response) error
+		Create(ctx context.Context, in *Task, out *ResponseObj) error
+		Delete(ctx context.Context, in *Task, out *ResponseObj) error
+		Modfiy(ctx context.Context, in *Task, out *ResponseObj) error
+		Finished(ctx context.Context, in *Task, out *ResponseObj) error
+		Search(ctx context.Context, in *SearchRequest, out *ResponseArr) error
 	}
 	type TaskService struct {
 		taskService
@@ -153,22 +153,22 @@ type taskServiceHandler struct {
 	TaskServiceHandler
 }
 
-func (h *taskServiceHandler) Create(ctx context.Context, in *Task, out *Response) error {
+func (h *taskServiceHandler) Create(ctx context.Context, in *Task, out *ResponseObj) error {
 	return h.TaskServiceHandler.Create(ctx, in, out)
 }
 
-func (h *taskServiceHandler) Delete(ctx context.Context, in *Task, out *Response) error {
+func (h *taskServiceHandler) Delete(ctx context.Context, in *Task, out *ResponseObj) error {
 	return h.TaskServiceHandler.Delete(ctx, in, out)
 }
 
-func (h *taskServiceHandler) Modfiy(ctx context.Context, in *Task, out *Response) error {
+func (h *taskServiceHandler) Modfiy(ctx context.Context, in *Task, out *ResponseObj) error {
 	return h.TaskServiceHandler.Modfiy(ctx, in, out)
 }
 
-func (h *taskServiceHandler) Finished(ctx context.Context, in *Task, out *Response) error {
+func (h *taskServiceHandler) Finished(ctx context.Context, in *Task, out *ResponseObj) error {
 	return h.TaskServiceHandler.Finished(ctx, in, out)
 }
 
-func (h *taskServiceHandler) Search(ctx context.Context, in *SearchRequest, out *Response) error {
+func (h *taskServiceHandler) Search(ctx context.Context, in *SearchRequest, out *ResponseArr) error {
 	return h.TaskServiceHandler.Search(ctx, in, out)
 }

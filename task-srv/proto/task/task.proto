@@ -12,15 +12,15 @@ import "google/protobuf/any.proto";
 // 定义task服务接口
 service TaskService {
   // 创建任务
-  rpc Create(Task) returns (Response){}
+  rpc Create(Task) returns (ResponseObj){}
   // 删除任务
-  rpc Delete(Task) returns (Response) {}
+  rpc Delete(Task) returns (ResponseObj) {}
   // 修改任务
-  rpc Modfiy(Task) returns (Response) {}
+  rpc Modfiy(Task) returns (ResponseObj) {}
   // 完成任务
-  rpc Finished(Task) returns (Response) {}
+  rpc Finished(Task) returns (ResponseObj) {}
   // 搜索
-  rpc Search(SearchRequest) returns (Response);
+  rpc Search(SearchRequest) returns (ResponseArr);
 
 }
 
@@ -52,12 +52,20 @@ message Task {
   int64 updateTime = 8;
 }
 
-// 返回参数实体
-message Response {
+// 对象返回参数实体
+message ResponseObj {
   int32 result = 1;
   int32 code = 2;
   string msg = 3;
   google.protobuf.Any data = 4;
+}
+
+// 数组返回参数实体
+message ResponseArr {
+  int32 result = 1;
+  int32 code = 2;
+  string msg = 3;
+  repeated google.protobuf.Any data = 4;
 }
 
 // 查询接口参数实体
@@ -65,7 +73,7 @@ message SearchRequest {
   // 页码
   int64 page = 1;
   // 每页数量
-  int32 limit = 2;
+  int64 limit = 2;
   // 排序方式
   string sortBy = 3;
   // 顺序 0降序，1升序
