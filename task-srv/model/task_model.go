@@ -37,6 +37,17 @@ func (this *TaskModelImpl) collection() *mongo.Collection {
 	return this.Conn.Database(DbName).Collection(TaskCollection)
 }
 
+func (this *TaskModelImpl) InsertOne(ctx context.Context, task *pb.Task) error {
+	_, err := this.collection().InsertOne(ctx, bson.M{
+		"body":       task.Body,
+		"startTime":  task.StartTime,
+		"endTime":    task.EndTime,
+		"isFinished": UnFinished,
+		"createTime": time.Now().Unix(),
+	})
+	return err
+}
+
 func (this *TaskModelImpl) Delete(ctx context.Context, id string) error {
 	oid, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
@@ -46,7 +57,26 @@ func (this *TaskModelImpl) Delete(ctx context.Context, id string) error {
 	return err
 }
 
-func (this *TaskModelImpl) Modfiy(ctx context.Context, task *pb.Task) error {
+func (this *TaskModelImpl) Modify(ctx context.Context, task *pb.Task) error {
+	id, err := primitive.ObjectIDFromHex(task.Id)
+	if err != nil {
+		return err
+	}
+	now := time.Now().Unix()
+	update := bson.M{
+		"isFinished": int32(task.IsFinished),
+		"updateTime": now,
+	}
+	if task.IsFinished == Finished {
+		update["finishTime"] = now
+	}
+	log.Print(task)
+	log.Println(update)
+	_, err = this.collection().UpdateOne(ctx, bson.M{"_id": id}, bson.M{"$set": update})
+	return err
+}
+
+func (this *TaskModelImpl) Finished(ctx context.Context, task *pb.Task) error {
 	id, err := primitive.ObjectIDFromHex(task.Id)
 	if err != nil {
 		return err
@@ -94,7 +124,7 @@ func (this *TaskModelImpl) Search(ctx context.Context, req *pb.SearchRequest) ([
 		return nil, errors.WithMessage(err, "search mongo")
 	}
 	var rows []*pb.Task
-	if err := cursor.All(ctx, rows); err != nil {
+	if err := cursor.All(ctx, &rows); err != nil {
 		return nil, errors.WithMessage(err, "parse data")
 	}
 	return rows, err

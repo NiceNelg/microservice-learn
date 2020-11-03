@@ -90,12 +90,12 @@ func (this *TaskController) Search(ctx context.Context, req *pb.SearchRequest, r
 	if req.Order == 0 {
 		req.Order = -1
 	}
-	if req.Page*(req.Limit-1) > count {
+	if req.Limit*(req.Page-1) > count {
 		return errors.New("There's not that much data")
 	}
 	tmp, err := this.TaskModel.Search(ctx, req)
 	if err != nil {
-		return errors.New("search data")
+		return err
 	}
 	var rows []*any.Any
 	for _, item := range tmp {

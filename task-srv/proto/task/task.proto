@@ -16,7 +16,7 @@ service TaskService {
   // 删除任务
   rpc Delete(Task) returns (ResponseObj) {}
   // 修改任务
-  rpc Modfiy(Task) returns (ResponseObj) {}
+  rpc Modify(Task) returns (ResponseObj) {}
   // 完成任务
   rpc Finished(Task) returns (ResponseObj) {}
   // 搜索

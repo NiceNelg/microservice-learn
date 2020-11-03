@@ -50,7 +50,7 @@ type TaskService interface {
 	// 删除任务
 	Delete(ctx context.Context, in *Task, opts ...client.CallOption) (*ResponseObj, error)
 	// 修改任务
-	Modfiy(ctx context.Context, in *Task, opts ...client.CallOption) (*ResponseObj, error)
+	Modify(ctx context.Context, in *Task, opts ...client.CallOption) (*ResponseObj, error)
 	// 完成任务
 	Finished(ctx context.Context, in *Task, opts ...client.CallOption) (*ResponseObj, error)
 	// 搜索
@@ -89,8 +89,8 @@ func (c *taskService) Delete(ctx context.Context, in *Task, opts ...client.CallO
 	return out, nil
 }
 
-func (c *taskService) Modfiy(ctx context.Context, in *Task, opts ...client.CallOption) (*ResponseObj, error) {
-	req := c.c.NewRequest(c.name, "TaskService.Modfiy", in)
+func (c *taskService) Modify(ctx context.Context, in *Task, opts ...client.CallOption) (*ResponseObj, error) {
+	req := c.c.NewRequest(c.name, "TaskService.Modify", in)
 	out := new(ResponseObj)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -127,7 +127,7 @@ type TaskServiceHandler interface {
 	// 删除任务
 	Delete(context.Context, *Task, *ResponseObj) error
 	// 修改任务
-	Modfiy(context.Context, *Task, *ResponseObj) error
+	Modify(context.Context, *Task, *ResponseObj) error
 	// 完成任务
 	Finished(context.Context, *Task, *ResponseObj) error
 	// 搜索
@@ -138,7 +138,7 @@ func RegisterTaskServiceHandler(s server.Server, hdlr TaskServiceHandler, opts .
 	type taskService interface {
 		Create(ctx context.Context, in *Task, out *ResponseObj) error
 		Delete(ctx context.Context, in *Task, out *ResponseObj) error
-		Modfiy(ctx context.Context, in *Task, out *ResponseObj) error
+		Modify(ctx context.Context, in *Task, out *ResponseObj) error
 		Finished(ctx context.Context, in *Task, out *ResponseObj) error
 		Search(ctx context.Context, in *SearchRequest, out *ResponseArr) error
 	}
@@ -161,8 +161,8 @@ func (h *taskServiceHandler) Delete(ctx context.Context, in *Task, out *Response
 	return h.TaskServiceHandler.Delete(ctx, in, out)
 }
 
-func (h *taskServiceHandler) Modfiy(ctx context.Context, in *Task, out *ResponseObj) error {
-	return h.TaskServiceHandler.Modfiy(ctx, in, out)
+func (h *taskServiceHandler) Modify(ctx context.Context, in *Task, out *ResponseObj) error {
+	return h.TaskServiceHandler.Modify(ctx, in, out)
 }
 
 func (h *taskServiceHandler) Finished(ctx context.Context, in *Task, out *ResponseObj) error {
