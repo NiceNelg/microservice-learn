@@ -1,4 +1,4 @@
-module task-srv
+module achievement-srv
 
 go 1.14
 

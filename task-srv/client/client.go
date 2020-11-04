@@ -80,6 +80,7 @@ func main() {
 
 func insertTask(taskService pb.TaskService, body string, start, end int64) {
 	_, err := taskService.Create(context.Background(), &pb.Task{
+		UserId:    "1000",
 		Body:      body,
 		StartTime: start,
 		EndTime:   end,

@@ -5,16 +5,23 @@ import (
 	"errors"
 	"github.com/golang/protobuf/ptypes"
 	"github.com/golang/protobuf/ptypes/any"
+	"github.com/micro/go-micro/v2"
+	"log"
 	"task-srv/model"
 	pb "task-srv/proto/task"
 )
 
+const (
+	TaskFinishedTopic = "task.finished"
+)
+
 type TaskController struct {
-	TaskModel model.TaskModel
+	TaskModel            model.TaskModel
+	TaskFinishedPubEvent micro.Event
 }
 
 func (this *TaskController) Create(ctx context.Context, req *pb.Task, resp *pb.ResponseObj) error {
-	if req.Body == "" || req.StartTime <= 0 || req.EndTime <= 0 {
+	if req.Body == "" || req.StartTime <= 0 || req.EndTime <= 0 || req.UserId == "" {
 		return errors.New("bad param")
 	}
 	if err := this.TaskModel.InsertOne(ctx, req); err != nil {
@@ -69,6 +76,15 @@ func (this *TaskController) Finished(ctx context.Context, req *pb.Task, resp *pb
 		Result: 1,
 		Code:   200,
 		Msg:    "success",
+	}
+
+	// 发送task完成的消息
+	if task, err := this.TaskModel.FindById(ctx, req.Id); err != nil {
+		log.Print("[error]can't send \"task finished\" message. ", err)
+	} else {
+		if err = this.TaskFinishedPubEvent.Publish(ctx, task); err != nil {
+			log.Print("[error]can't send \"task finished\" message. ", err)
+		}
 	}
 	return nil
 }

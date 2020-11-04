@@ -27,6 +27,8 @@ type TaskModel interface {
 	Finished(ctx context.Context, task *pb.Task) error
 	Count(ctx context.Context, keyword string) (int64, error)
 	Search(ctx context.Context, req *pb.SearchRequest) ([]*pb.Task, error)
+	// 根据ID搜索
+	FindById(ctx context.Context, id string) (*pb.Task, error)
 }
 
 type TaskModelImpl struct {
@@ -44,6 +46,8 @@ func (this *TaskModelImpl) InsertOne(ctx context.Context, task *pb.Task) error {
 		"endTime":    task.EndTime,
 		"isFinished": UnFinished,
 		"createTime": time.Now().Unix(),
+		// 新增用户id
+		"userId": task.UserId,
 	})
 	return err
 }
@@ -128,4 +132,17 @@ func (this *TaskModelImpl) Search(ctx context.Context, req *pb.SearchRequest) ([
 		return nil, errors.WithMessage(err, "parse data")
 	}
 	return rows, err
+}
+
+func (this *TaskModelImpl) FindById(ctx context.Context, id string) (*pb.Task, error) {
+	objectId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, errors.WithMessage(err, "parse ID")
+	}
+	result := this.collection().FindOne(ctx, bson.M{"_id": objectId})
+	task := new(pb.Task)
+	if err := result.Decode(task); err != nil {
+		return nil, errors.WithMessage(err, "search mongo")
+	}
+	return task, nil
 }
