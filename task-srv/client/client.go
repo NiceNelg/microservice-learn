@@ -5,8 +5,8 @@ import (
 	"github.com/golang/protobuf/ptypes"
 	"github.com/micro/go-micro/v2"
 	"log"
-	"task-srv/model"
 	pb "task-srv/proto/task"
+	"task-srv/repository"
 	"time"
 )
 
@@ -46,7 +46,7 @@ func main() {
 	row := list[0]
 	if _, err = taskService.Finished(context.Background(), &pb.Task{
 		Id:         row.Id,
-		IsFinished: model.Finished,
+		IsFinished: repository.Finished,
 	}); err != nil {
 		log.Fatal("finished", row.Id, err)
 	}

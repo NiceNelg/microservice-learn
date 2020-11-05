@@ -6,8 +6,8 @@ import (
 	"github.com/pkg/errors"
 	"log"
 	"task-srv/controller"
-	"task-srv/model"
 	pb "task-srv/proto/task"
+	"task-srv/repository"
 	"task-srv/utils"
 	"time"
 )
@@ -30,7 +30,7 @@ func main() {
 	service.Init()
 
 	ctro := &controller.TaskController{
-		TaskModel: &model.TaskModelImpl{
+		TaskModel: &repository.TaskModelImpl{
 			Conn: conn,
 		},
 	}

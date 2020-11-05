@@ -5,12 +5,12 @@ import (
 	"errors"
 	"github.com/golang/protobuf/ptypes"
 	"github.com/golang/protobuf/ptypes/any"
-	"task-srv/model"
 	pb "task-srv/proto/task"
+	"task-srv/repository"
 )
 
 type TaskController struct {
-	TaskModel model.TaskModel
+	TaskModel repository.TaskModel
 }
 
 func (this *TaskController) Create(ctx context.Context, req *pb.Task, resp *pb.ResponseObj) error {
@@ -59,7 +59,7 @@ func (this *TaskController) Modify(ctx context.Context, req *pb.Task, resp *pb.R
 }
 
 func (this *TaskController) Finished(ctx context.Context, req *pb.Task, resp *pb.ResponseObj) error {
-	if req.Id == "" || req.IsFinished != model.UnFinished && req.IsFinished != model.Finished {
+	if req.Id == "" || req.IsFinished != repository.UnFinished && req.IsFinished != repository.Finished {
 		return errors.New("bad param")
 	}
 	if err := this.TaskModel.Finished(ctx, req); err != nil {
