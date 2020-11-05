@@ -10,7 +10,7 @@ import (
 )
 
 type TaskController struct {
-	TaskModel repository.TaskModel
+	TaskModel repository.TaskRepo
 }
 
 func (this *TaskController) Create(ctx context.Context, req *pb.Task, resp *pb.ResponseObj) error {
