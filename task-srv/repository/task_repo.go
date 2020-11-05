@@ -1,4 +1,4 @@
-package model
+package repository
 
 import (
 	"context"
@@ -20,7 +20,7 @@ const (
 	Finished       = 1
 )
 
-type TaskModel interface {
+type TaskRepo interface {
 	InsertOne(ctx context.Context, task *pb.Task) error
 	Delete(ctx context.Context, id string) error
 	Modify(ctx context.Context, task *pb.Task) error
@@ -31,15 +31,15 @@ type TaskModel interface {
 	FindById(ctx context.Context, id string) (*pb.Task, error)
 }
 
-type TaskModelImpl struct {
+type TaskRepoImpl struct {
 	Conn *mongo.Client
 }
 
-func (this *TaskModelImpl) collection() *mongo.Collection {
+func (this *TaskRepoImpl) collection() *mongo.Collection {
 	return this.Conn.Database(DbName).Collection(TaskCollection)
 }
 
-func (this *TaskModelImpl) InsertOne(ctx context.Context, task *pb.Task) error {
+func (this *TaskRepoImpl) InsertOne(ctx context.Context, task *pb.Task) error {
 	_, err := this.collection().InsertOne(ctx, bson.M{
 		"body":       task.Body,
 		"startTime":  task.StartTime,
@@ -52,7 +52,7 @@ func (this *TaskModelImpl) InsertOne(ctx context.Context, task *pb.Task) error {
 	return err
 }
 
-func (this *TaskModelImpl) Delete(ctx context.Context, id string) error {
+func (this *TaskRepoImpl) Delete(ctx context.Context, id string) error {
 	oid, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return err
@@ -61,7 +61,7 @@ func (this *TaskModelImpl) Delete(ctx context.Context, id string) error {
 	return err
 }
 
-func (this *TaskModelImpl) Modify(ctx context.Context, task *pb.Task) error {
+func (this *TaskRepoImpl) Modify(ctx context.Context, task *pb.Task) error {
 	id, err := primitive.ObjectIDFromHex(task.Id)
 	if err != nil {
 		return err
@@ -80,7 +80,7 @@ func (this *TaskModelImpl) Modify(ctx context.Context, task *pb.Task) error {
 	return err
 }
 
-func (this *TaskModelImpl) Finished(ctx context.Context, task *pb.Task) error {
+func (this *TaskRepoImpl) Finished(ctx context.Context, task *pb.Task) error {
 	id, err := primitive.ObjectIDFromHex(task.Id)
 	if err != nil {
 		return err
@@ -99,7 +99,7 @@ func (this *TaskModelImpl) Finished(ctx context.Context, task *pb.Task) error {
 	return err
 }
 
-func (this *TaskModelImpl) Count(ctx context.Context, keyword string) (int64, error) {
+func (this *TaskRepoImpl) Count(ctx context.Context, keyword string) (int64, error) {
 	filter := bson.M{}
 	if keyword != "" && strings.TrimSpace(keyword) != "" {
 		filter = bson.M{
@@ -110,7 +110,7 @@ func (this *TaskModelImpl) Count(ctx context.Context, keyword string) (int64, er
 	return count, err
 }
 
-func (this *TaskModelImpl) Search(ctx context.Context, req *pb.SearchRequest) ([]*pb.Task, error) {
+func (this *TaskRepoImpl) Search(ctx context.Context, req *pb.SearchRequest) ([]*pb.Task, error) {
 	filter := bson.M{}
 	if req.Keyword != "" && strings.TrimSpace(req.Keyword) != "" {
 		filter = bson.M{
@@ -134,7 +134,7 @@ func (this *TaskModelImpl) Search(ctx context.Context, req *pb.SearchRequest) ([
 	return rows, err
 }
 
-func (this *TaskModelImpl) FindById(ctx context.Context, id string) (*pb.Task, error) {
+func (this *TaskRepoImpl) FindById(ctx context.Context, id string) (*pb.Task, error) {
 	objectId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return nil, errors.WithMessage(err, "parse ID")

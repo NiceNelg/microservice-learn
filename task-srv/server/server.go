@@ -6,8 +6,8 @@ import (
 	"github.com/pkg/errors"
 	"log"
 	"task-srv/controller"
-	"task-srv/model"
 	pb "task-srv/proto/task"
+	"task-srv/repository"
 	"task-srv/utils"
 	"time"
 )
@@ -30,7 +30,7 @@ func main() {
 	service.Init()
 
 	ctro := &controller.TaskController{
-		TaskModel: &model.TaskModelImpl{
+		TaskRepo: &repository.TaskRepoImpl{
 			Conn: conn,
 		},
 		// 注入消息发送实例,为避免消息名冲突,这里的topic我们用服务名+自定义消息名拼出
