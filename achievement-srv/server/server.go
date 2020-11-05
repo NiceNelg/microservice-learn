@@ -1,7 +1,7 @@
 package main
 
 import (
-	"achievement-srv/model"
+	"achievement-srv/repository"
 	"achievement-srv/subscriber"
 	"achievement-srv/utils"
 	"context"
@@ -31,7 +31,7 @@ func main() {
 	service.Init()
 
 	handler := &subscriber.AchievementSub{
-		Model: &model.AchievementModelImpl{
+		Model: &repository.AchievementRepoImpl{
 			Conn: conn,
 		},
 	}

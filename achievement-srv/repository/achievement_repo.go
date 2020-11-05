@@ -1,4 +1,4 @@
-package model
+package repository
 
 import (
 	"context"
@@ -30,21 +30,21 @@ type Achievement struct {
 	UpdateTime int64 `bson:"updateTime"`
 }
 
-type AchievementModel interface {
+type AchievementRepo interface {
 	FindByUserId(ctx context.Context, userId string) (*Achievement, error)
 	Insert(ctx context.Context, achievement *Achievement) error
 	Update(ctx context.Context, achievement *Achievement) error
 }
 
-type AchievementModelImpl struct {
+type AchievementRepoImpl struct {
 	Conn *mongo.Client
 }
 
-func (this *AchievementModelImpl) collection() *mongo.Collection {
+func (this *AchievementRepoImpl) collection() *mongo.Collection {
 	return this.Conn.Database(DbName).Collection(TaskCollection)
 }
 
-func (this *AchievementModelImpl) FindByUserId(ctx context.Context, userId string) (*Achievement, error) {
+func (this *AchievementRepoImpl) FindByUserId(ctx context.Context, userId string) (*Achievement, error) {
 	result := this.collection().FindOne(ctx, bson.M{"userId": userId})
 	// findOne如果查不到是会报错的,这里要处理一下
 	if result.Err() == mongo.ErrNoDocuments {
@@ -56,12 +56,12 @@ func (this *AchievementModelImpl) FindByUserId(ctx context.Context, userId strin
 	}
 	return achievement, nil
 }
-func (this *AchievementModelImpl) Insert(ctx context.Context, achievement *Achievement) error {
+func (this *AchievementRepoImpl) Insert(ctx context.Context, achievement *Achievement) error {
 	_, err := this.collection().InsertOne(ctx, achievement)
 	return err
 }
 
-func (this *AchievementModelImpl) Update(ctx context.Context, achievement *Achievement) error {
+func (this *AchievementRepoImpl) Update(ctx context.Context, achievement *Achievement) error {
 	achievement.UpdateTime = time.Now().Unix()
 	oid, err := primitive.ObjectIDFromHex(achievement.Id)
 	if err != nil {

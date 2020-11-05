@@ -1,8 +1,8 @@
 package subscriber
 
 import (
-	"achievement-srv/model"
 	pb "achievement-srv/proto/task"
+	"achievement-srv/repository"
 	"context"
 	"errors"
 	"log"
@@ -12,7 +12,7 @@ import (
 
 // 定义实现类
 type AchievementSub struct {
-	Model model.AchievementModel
+	Model repository.AchievementRepo
 }
 
 func (this *AchievementSub) Finished(ctx context.Context, task *pb.Task) error {
@@ -27,7 +27,7 @@ func (this *AchievementSub) Finished(ctx context.Context, task *pb.Task) error {
 	}
 	now := time.Now().Unix()
 	if entity == nil {
-		entity = &model.Achievement{
+		entity = &repository.Achievement{
 			UserId:        task.UserId,
 			Total:         1,
 			Finished1Time: now,
