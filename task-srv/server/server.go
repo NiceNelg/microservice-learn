@@ -30,7 +30,7 @@ func main() {
 	service.Init()
 
 	ctro := &controller.TaskController{
-		TaskModel: &repository.TaskRepoImpl{
+		TaskRepo: &repository.TaskRepoImpl{
 			Conn: conn,
 		},
 	}
