@@ -20,7 +20,7 @@ func main() {
 		// 配置etcd为注册中心，配置etcd路径，默认端口是2379
 		micro.Registry(
 			etcd.NewRegistry(
-				registry.Addrs("192.168.0.118:2379"),
+				registry.Addrs("127.0.0.1:2379"),
 			),
 		),
 	)

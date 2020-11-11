@@ -14,7 +14,7 @@ import (
 	"time"
 )
 
-const MONGO_URL = "mongodb://172.17.0.3:27017"
+const MONGO_URL = "mongodb://127.0.0.1:27017"
 
 func main() {
 	log.SetFlags(log.Llongfile)
@@ -31,7 +31,7 @@ func main() {
 		// 配置etcd作为注册中心
 		micro.Registry(
 			etcd.NewRegistry(
-				registry.Addrs("192.168.0.118:2379"),
+				registry.Addrs("127.0.0.1:2379"),
 			),
 		),
 	)
