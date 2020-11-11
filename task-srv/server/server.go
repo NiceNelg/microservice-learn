@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	"github.com/micro/go-micro/v2"
+	"github.com/micro/go-micro/v2/registry"
+	"github.com/micro/go-micro/v2/registry/etcd"
 	"github.com/pkg/errors"
 	"log"
 	"task-srv/controller"
@@ -12,7 +14,7 @@ import (
 	"time"
 )
 
-const MONGO_URL = "mongodb://127.0.0.1:27017"
+const MONGO_URL = "mongodb://172.17.0.3:27017"
 
 func main() {
 	log.SetFlags(log.Llongfile)
@@ -26,6 +28,12 @@ func main() {
 	service := micro.NewService(
 		micro.Name("go.micro.service.task"),
 		micro.Version("lastest"),
+		// 配置etcd作为注册中心
+		micro.Registry(
+			etcd.NewRegistry(
+				registry.Addrs("192.168.0.118:2379"),
+			),
+		),
 	)
 	service.Init()
 

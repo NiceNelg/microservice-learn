@@ -4,6 +4,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/golang/protobuf/ptypes"
 	"github.com/micro/go-micro/v2/client"
+	"github.com/micro/go-micro/v2/registry"
+	"github.com/micro/go-micro/v2/registry/etcd"
 	"github.com/micro/go-micro/v2/web"
 	"log"
 	pb "task-api/proto/task"
@@ -14,6 +16,11 @@ func main() {
 
 	service := web.NewService(
 		web.Name("go.micro.api.task"),
+		web.Registry(
+			etcd.NewRegistry(
+				registry.Addrs("127.0.0.1:2379"),
+			),
+		),
 		web.Address(":8888"),
 		web.Handler(g),
 	)

@@ -4,6 +4,8 @@ import (
 	"context"
 	"github.com/golang/protobuf/ptypes"
 	"github.com/micro/go-micro/v2"
+	"github.com/micro/go-micro/v2/registry"
+	"github.com/micro/go-micro/v2/registry/etcd"
 	"log"
 	pb "task-srv/proto/task"
 	"task-srv/repository"
@@ -13,7 +15,15 @@ import (
 func main() {
 	log.SetFlags(log.Llongfile)
 
-	server := micro.NewService(micro.Name("go.micro.client.task"))
+	server := micro.NewService(
+		micro.Name("go.micro.client.task"),
+		// 配置etcd为注册中心，配置etcd路径，默认端口是2379
+		micro.Registry(
+			etcd.NewRegistry(
+				registry.Addrs("192.168.0.118:2379"),
+			),
+		),
+	)
 	server.Init()
 
 	taskService := pb.NewTaskService("go.micro.service.task", server.Client())
