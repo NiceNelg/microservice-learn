@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	"github.com/micro/go-micro/v2"
+	"github.com/micro/go-micro/v2/broker"
+	"github.com/micro/go-micro/v2/broker/nats"
 	"github.com/micro/go-micro/v2/registry"
 	"github.com/micro/go-micro/v2/registry/etcd"
 	"github.com/pkg/errors"
@@ -32,6 +34,11 @@ func main() {
 		micro.Registry(
 			etcd.NewRegistry(
 				registry.Addrs("127.0.0.1:2379"),
+			),
+		),
+		micro.Broker(
+			nats.NewBroker(
+				broker.Addrs("nats://127.0.0.1:4222"),
 			),
 		),
 	)
