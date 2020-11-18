@@ -9,6 +9,7 @@ import (
 	"log"
 	pb "task-srv/proto/task"
 	"task-srv/repository"
+	"time"
 )
 
 const (
@@ -16,7 +17,7 @@ const (
 )
 
 type TaskController struct {
-	TaskRepo            repository.TaskRepo
+	TaskRepo             repository.TaskRepo
 	TaskFinishedPubEvent micro.Event
 }
 
@@ -90,6 +91,10 @@ func (this *TaskController) Finished(ctx context.Context, req *pb.Task, resp *pb
 }
 
 func (this *TaskController) Search(ctx context.Context, req *pb.SearchRequest, resp *pb.ResponseArr) error {
+
+	// 休眠造成熔断
+	time.Sleep(3 * time.Second)
+
 	count, err := this.TaskRepo.Count(ctx, req.Keyword)
 	if err != nil {
 		return errors.New("count row number")
