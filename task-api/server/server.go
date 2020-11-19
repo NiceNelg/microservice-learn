@@ -7,14 +7,29 @@ import (
 	"github.com/micro/go-micro/v2/registry"
 	"github.com/micro/go-micro/v2/registry/etcd"
 	"github.com/micro/go-micro/v2/web"
+	"task-api/common/tracer"
+
 	//"github.com/micro/go-plugins/wrapper/breaker/hystrix/v2"
+	"github.com/micro/go-plugins/wrapper/trace/opentracing/v2"
 	"log"
 	"task-api/handler"
 	pb "task-api/proto/task"
 	"task-api/wrapper/breaker/hystrix"
 )
 
+const (
+	ServerName = "go.micro.api.task"
+	JaegerAddr = "127.0.0.1:6831"
+)
+
 func main() {
+	// 配置jaeger连接
+	jaegerTracer, closer, err := tracer.NewJaegerTracer(ServerName, JaegerAddr)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer closer.Close()
+
 	etcdRegister := etcd.NewRegistry(
 		registry.Addrs("127.0.0.1:2379"),
 	)
@@ -23,7 +38,10 @@ func main() {
 		micro.Name("go.micro.client.task"),
 		micro.Registry(etcdRegister),
 		micro.WrapClient(
+			// 引入hystrix包装器
 			hystrix.NewClientWrapper(),
+			// 配置链路追踪为jaeger
+			opentracing.NewClientWrapper(jaegerTracer),
 		),
 	)
 
@@ -49,7 +67,7 @@ func main() {
 	webHandler := gin.Default()
 
 	service := web.NewService(
-		web.Name("go.micro.api.task"),
+		web.Name(ServerName),
 		web.Address(":8888"),
 		web.Handler(webHandler),
 		web.Registry(etcdRegister),

@@ -7,8 +7,10 @@ import (
 	"github.com/micro/go-micro/v2/broker/nats"
 	"github.com/micro/go-micro/v2/registry"
 	"github.com/micro/go-micro/v2/registry/etcd"
+	"github.com/micro/go-plugins/wrapper/trace/opentracing/v2"
 	"github.com/pkg/errors"
 	"log"
+	"task-srv/common/tracer"
 	"task-srv/controller"
 	pb "task-srv/proto/task"
 	"task-srv/repository"
@@ -16,7 +18,11 @@ import (
 	"time"
 )
 
-const MONGO_URL = "mongodb://127.0.0.1:27017"
+const (
+	MONGO_URL  = "mongodb://127.0.0.1:27017"
+	ServerName = "go.micro.service.task"
+	JaegerAddr = "127.0.0.1:6831"
+)
 
 func main() {
 	log.SetFlags(log.Llongfile)
@@ -27,8 +33,15 @@ func main() {
 	}
 	defer conn.Disconnect(context.Background())
 
+	// 配置jaeger连接
+	jaegerTracer, closer, err := tracer.NewJaegerTracer(ServerName, JaegerAddr)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer closer.Close()
+
 	service := micro.NewService(
-		micro.Name("go.micro.service.task"),
+		micro.Name(ServerName),
 		micro.Version("lastest"),
 		// 配置etcd作为注册中心
 		micro.Registry(
@@ -40,6 +53,10 @@ func main() {
 			nats.NewBroker(
 				broker.Addrs("nats://127.0.0.1:4222"),
 			),
+		),
+		// 配置链路追踪为jaeger
+		micro.WrapHandler(
+			opentracing.NewHandlerWrapper(jaegerTracer),
 		),
 	)
 	service.Init()

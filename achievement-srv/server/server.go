@@ -1,6 +1,7 @@
 package main
 
 import (
+	"achievement-srv/common/tracer"
 	"achievement-srv/repository"
 	"achievement-srv/subscriber"
 	"achievement-srv/utils"
@@ -8,13 +9,16 @@ import (
 	"github.com/micro/go-micro/v2"
 	"github.com/micro/go-micro/v2/broker"
 	"github.com/micro/go-micro/v2/broker/nats"
+	"github.com/micro/go-plugins/wrapper/trace/opentracing/v2"
 	"github.com/pkg/errors"
 	"log"
 	"time"
 )
 
 const (
-	MONGO_URL = "mongodb://localhost:27017"
+	MONGO_URL  = "mongodb://localhost:27017"
+	ServerName = "go.micro.service.achievement"
+	JaegerAddr = "127.0.0.1:6831"
 )
 
 func main() {
@@ -26,8 +30,15 @@ func main() {
 	}
 	defer conn.Disconnect(context.Background())
 
+	// 配置jaeger连接
+	jaegerTracer, closer, err := tracer.NewJaegerTracer(ServerName, JaegerAddr)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer closer.Close()
+
 	service := micro.NewService(
-		micro.Name("go.micro.service.achievement"),
+		micro.Name(ServerName),
 		micro.Version("lastest"),
 		// 配置nats作为消息中间件，
 		// 这里没有将该服务注册到etcd中，表明消息的订阅只需要知道自己订阅的事件名称以及接收事件通知的地址，
@@ -36,6 +47,10 @@ func main() {
 			nats.NewBroker(
 				broker.Addrs("nats://127.0.0.1:4222"),
 			),
+		),
+		micro.WrapSubscriber(
+			// 配置链路追踪为jaeger
+			opentracing.NewSubscriberWrapper(jaegerTracer),
 		),
 	)
 	service.Init()
