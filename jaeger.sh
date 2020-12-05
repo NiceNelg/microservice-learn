@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# jaeger链路追踪工具web端管理界面：http://localhost:16686
 docker run -d --name jaeger \
 -e COLLECTOR_ZIPKIN_HTTP_PORT=9411 \
 -p 5775:5775/udp \
